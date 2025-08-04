@@ -20,7 +20,6 @@ public class Livro {
     private Integer anoNascimento;
     private Integer anoMorte;
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -85,8 +84,18 @@ public class Livro {
                 autor,
                 idioma,
                 downloads,
-                anoNascimento != null ? anoNascimento : "Desconhecido",
-                anoMorte != null ? anoMorte : "Vivo"
+                anoQueEstavaVivo()
         );
     }
+
+    public String anoQueEstavaVivo() {
+        if (anoNascimento != null && anoMorte != null) {
+            return autor + " viveu de " + anoNascimento + " até " + anoMorte;
+        } else if (anoNascimento != null) {
+            return autor + " nasceu em " + anoNascimento + " e pode ainda estar vivo";
+        } else {
+            return "Sem informações sobre nascimento/morte de " + autor;
+        }
+    }
+
 }

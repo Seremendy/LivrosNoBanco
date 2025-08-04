@@ -24,22 +24,39 @@ public class ConsoleApp {
             mostrarMenu();
             if (scanner.hasNextInt()) {
                 opcao = scanner.nextInt();
-                scanner.nextLine(); // limpar buffer
+                scanner.nextLine();
 
                 switch (opcao) {
-                    case 1 -> buscarECadastrarLivro(scanner);
-                    case 2 -> listarLivros();
-                    case 3 -> listarAutores();
-                    case 4 -> listarAutoresVivos(scanner);
-                    case 5 -> listarPorIdioma(scanner);
-                    case 6 -> listarMaisBaixados();
-                    case 7 -> apagarLivroPorId(scanner);
-                    case 9 -> System.out.println("Saindo...");
-                    default -> System.out.println("Opção inválida.");
+                    case 1:
+                        buscarECadastrarLivro(scanner);
+                        break;
+                    case 2:
+                        listarLivros();
+                        break;
+                    case 3:
+                        listarAutores();
+                        break;
+                    case 4:
+                        listarAutoresVivos(scanner);
+                        break;
+                    case 5:
+                        listarPorIdioma(scanner);
+                        break;
+                    case 6:
+                        listarMaisBaixados();
+                        break;
+                    case 7:
+                        apagarLivroPorId(scanner);
+                        break;
+                    case 9:
+                        System.out.println("Saindo...");
+                        break;
+                    default:
+                        System.out.println("Opção inválida.");
                 }
             } else {
                 System.out.println("Entrada inválida. Digite um número.");
-                scanner.nextLine(); // limpar entrada inválida
+                scanner.nextLine();
             }
         }
     }
@@ -50,7 +67,7 @@ public class ConsoleApp {
             1 - Buscar e cadastrar livros por título
             2 - Listar livros salvos
             3 - Listar todos os autores
-            4 - Listar autores vivos em determinado ano
+            4 - Listar autores vivos
             5 - Listar livros por idioma
             6 - Listar livros mais baixados
             7 - Apagar livro por ID
@@ -74,16 +91,23 @@ public class ConsoleApp {
         livroService.listarAutores().forEach(System.out::println);
     }
 
-    private void listarAutoresVivos(Scanner scanner) {
+    private void listarAutoresVivos(Scanner leitura) {
         System.out.print("Digite o ano para buscar autores vivos: ");
-        int ano = scanner.nextInt();
-        scanner.nextLine(); // limpar buffer
-        livroService.listarAutoresVivosNoAno(ano).forEach(System.out::println);
+        int ano = leitura.nextInt();
+        leitura.nextLine();
+
+        List<Livro> autoresVivos = livroService.listarAutoresVivosNoAno(ano);
+
+        if (autoresVivos.isEmpty()) {
+            System.out.println("Nenhum autor encontrado vivo no ano " + ano + ".");
+        } else {
+            autoresVivos.forEach(livro -> System.out.println(livro.anoQueEstavaVivo()));
+        }
     }
 
-    private void listarPorIdioma(Scanner scanner) {
+    private void listarPorIdioma(Scanner leitura) {
         System.out.print("Digite o idioma (ex: en, pt): ");
-        String idioma = scanner.nextLine();
+        String idioma = leitura.nextLine();
         livroService.listarPorIdioma(idioma).forEach(System.out::println);
     }
 

@@ -20,24 +20,14 @@ public class GutendexApi {
     public List<Livro> buscarLivrosPorTitulo(String titulo) {
         try {
             String url = "https://gutendex.com/books?search=" + URLEncoder.encode(titulo, StandardCharsets.UTF_8);
-
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .GET()
                     .build();
-
             HttpClient client = HttpClient.newBuilder()
                     .followRedirects(HttpClient.Redirect.ALWAYS)
                     .build();
-
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            System.out.println("🔍 Status HTTP: " + response.statusCode());
-            System.out.println("🔍 Corpo da resposta: " + response.body());
-
-            if (response.statusCode() != 200 || response.body() == null || response.body().isBlank()) {
-                throw new RuntimeException("❌ Resposta inválida da API Gutendex");
-            }
 
             ObjectMapper mapper = new ObjectMapper();
             GutendexResponse resultado = mapper.readValue(response.body(), GutendexResponse.class);
@@ -49,6 +39,13 @@ public class GutendexApi {
                         livro.setAutor(dto.getFirstAuthorName());
                         livro.setIdioma(String.join(",", dto.getLanguages()));
                         livro.setDownloads(dto.getDownload_count());
+
+                        if (!dto.getAuthors().isEmpty()) {
+                            var autor = dto.getAuthors().get(0);
+                            livro.setAnoNascimento(autor.getAnoNascimento());
+                            livro.setAnoMorte(autor.getAnoMorte());
+                        }
+
                         return livro;
                     })
                     .collect(Collectors.toList());

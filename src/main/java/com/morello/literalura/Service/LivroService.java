@@ -18,7 +18,6 @@ public class LivroService {
         this.gutendexApi = gutendexApi;
     }
 
-    // Salva apenas o primeiro livro da lista, se ainda não estiver no banco
     public void buscarECadastrar(String titulo) {
         List<Livro> livros = gutendexApi.buscarLivrosPorTitulo(titulo);
 
@@ -42,37 +41,31 @@ public class LivroService {
         System.out.println("Livro salvo: " + livro.getTitulo());
     }
 
-    // Retorna todos os livros cadastrados
     public List<Livro> listarTodos() {
         return livroRepository.findAll();
     }
 
-    // Apaga por ID se existir
     public void apagarPorId(Long id) {
         if (livroRepository.existsById(id)) {
             livroRepository.deleteById(id);
-            System.out.println("🗑️ Livro apagado com sucesso.");
+            System.out.println("Livro apagado com sucesso.");
         } else {
-            System.out.println("⚠️ Livro com ID " + id + " não encontrado.");
+            System.out.println("Livro com ID " + id + " não encontrado.");
         }
     }
 
-    // Lista autores vivos no ano informado
     public List<Livro> listarAutoresVivosNoAno(int ano) {
         return livroRepository.findAutoresVivosNoAno(ano);
     }
 
-    // Lista todos autores (sem repetição)
     public List<String> listarAutores() {
         return livroRepository.findAllAutoresDistinct();
     }
 
-    // Lista livros por idioma
     public List<Livro> listarPorIdioma(String idioma) {
         return livroRepository.findByIdiomaContainingIgnoreCase(idioma);
     }
 
-    // Lista livros mais baixados
     public List<Livro> listarMaisBaixados() {
         return livroRepository.findTop10ByOrderByDownloadsDesc();
     }
